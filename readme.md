@@ -13,6 +13,7 @@ Translate Jp novels to Kr using LLM.
 
 - Google API
 - Syosetu URL
+- Node.js 22
 
 ## To do
 
