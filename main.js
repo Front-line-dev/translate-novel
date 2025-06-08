@@ -1,6 +1,4 @@
-// To run this code you need to install the following dependencies:
-// npm install @google/genai mime
-// npm install -D @types/node
+// npm install @google/genai
 
 import { GoogleGenAI, Type } from "@google/genai";
 
@@ -46,7 +44,7 @@ async function main() {
     contents,
   });
 
-  console.log(response);
+  console.log(response.text);
 }
 
 main();
