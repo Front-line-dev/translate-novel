@@ -1,50 +1,25 @@
-// npm install @google/genai
+import "dotenv/config";
+import { saveNovel, loadNovel, loadNote } from "./utils/fileSystem";
+import { getNovelChapters, getNovelText } from "./utils/getNovel";
+import { requestTranslate, requestRetranslate } from "./utils/gemini";
 
-import { GoogleGenAI, Type } from "@google/genai";
+const novelID = process.env.NOVEL_ID;
 
-async function main() {
-  const ai = new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY,
-  });
-  const config = {
-    responseMimeType: "application/json",
-    responseSchema: {
-      type: Type.OBJECT,
-      required: ["translated", "note"],
-      properties: {
-        translated: {
-          type: Type.STRING,
-        },
-        note: {
-          type: Type.STRING,
-        },
-      },
-    },
-    systemInstruction: [
-      {
-        text: ``,
-      },
-    ],
-  };
-  const model = "gemini-2.5-pro-preview-05-06";
-  const contents = [
-    {
-      role: "user",
-      parts: [
-        {
-          text: `INSERT_INPUT_HERE`,
-        },
-      ],
-    },
-  ];
+const transaltedChapters = loadNovel(novelID);
+let note = loadNote(novelID);
+const chapters = getNovelChapters(novelID);
 
-  const response = await ai.models.generateContent({
-    model,
-    config,
-    contents,
-  });
+chapters.forEach(async (chapterLink) => {
+  const chapter = chapterLink.split("/").at(-2);
 
-  console.log(response.text);
-}
+  if (transaltedChapters.includes(chapter)) {
+    return;
+  }
 
-main();
+  const novelText = await getNovelText(chapterLink);
+  let { translated, newNote } = await requestTranslate(novelText, note);
+  const { retranslated } = await requestRetranslate(translated, newNote);
+
+  saveNovel(novelID, chapter, novelText, retranslated, newNote);
+  note = newNote;
+});

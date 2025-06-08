@@ -1,14 +1,7 @@
 import { JSDOM } from "jsdom";
 
 // Get novel chapter list
-async function getNovelList(novelID) {
-  // fetch https://ncode.syosetu.com/${novelID}/?p=1
-  // if '.c-pager__item.c-pager__item--next' is span, this is the last list page.
-  // if not, change p value to get all the list
-  // do this to all the list page
-  // document.querySelectorAll('.p-eplist__subtitle a') to find all anchor in this page
-  // make array of href values. The value should be a working link
-  // return array
+async function getNovelChapters(novelID) {
   const chapterLinks = [];
   let page = 1;
   let hasNextPage = true;
@@ -116,4 +109,4 @@ async function getNovelText(novelLink) {
 }
 
 // export all functions
-export { getNovelList, getNovelText };
+export { getNovelChapters, getNovelText };

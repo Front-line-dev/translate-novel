@@ -1,15 +1,15 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import fs from "fs";
 
-// ../prompt/translate.md text
-const TRANSLATE_PROMPT = "";
+const TRANSLATE_PROMPT = fs.readFileSync("../prompt/translate.md", "utf-8");
+const RETRANSLATE_PROMPT = fs.readFileSync("../prompt/retranslate.md", "utf-8");
 
-//  ../prompt/retranslate.md text
-const RETRANSLATE_PROMPT = "";
+const ai = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY,
+});
 
 const MODEL = "gemini-2.5-pro-preview-05-06";
 
-// Translate config
 const TRANSLATE_CONFIG = {
   responseMimeType: "application/json",
   responseSchema: {
@@ -31,14 +31,26 @@ const TRANSLATE_CONFIG = {
   ],
 };
 
-// Retranslate config
-const RETRANSLATE_CONFIG = {};
+const RETRANSLATE_CONFIG = {
+  responseMimeType: "application/json",
+  responseSchema: {
+    type: Type.OBJECT,
+    required: ["retranslated"],
+    properties: {
+      translated: {
+        type: Type.STRING,
+      },
+    },
+  },
+  systemInstruction: [
+    {
+      text: RETRANSLATE_PROMPT,
+    },
+  ],
+};
 
 async function requestTranslate(novelText, novelNote) {
-  // Generate UTF-8 .txt file with novelNote
-  // Convert the file to base64
-  const noteBase64 = "";
-
+  const noteBase64 = Buffer.from(novelNote, "utf-8").toString("base64");
   const contents = [
     {
       role: "user",
@@ -62,7 +74,37 @@ async function requestTranslate(novelText, novelNote) {
     contents,
   });
 
-  return response.text;
+  const responseObject = JSON.parse(response.text);
+  return responseObject;
 }
 
-async function requestRetranslate(novelText, novelNote) {}
+async function requestRetranslate(translated, novelNote) {
+  const noteBase64 = Buffer.from(novelNote, "utf-8").toString("base64");
+  const contents = [
+    {
+      role: "user",
+      parts: [
+        {
+          inlineData: {
+            data: noteBase64,
+            mimeType: `text/plain`,
+          },
+        },
+        {
+          text: translated,
+        },
+      ],
+    },
+  ];
+
+  const response = await ai.models.generateContent({
+    MODEL,
+    RETRANSLATE_CONFIG,
+    contents,
+  });
+
+  const responseObject = JSON.parse(response.text);
+  return responseObject;
+}
+
+export { requestTranslate, requestRetranslate };
