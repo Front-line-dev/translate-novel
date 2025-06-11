@@ -1,7 +1,7 @@
 import "dotenv/config";
-import { saveNovel, loadNovel, loadNote } from "./utils/fileSystem";
-import { getNovelChapters, getNovelText } from "./utils/getNovel";
-import { requestTranslate, requestRetranslate } from "./utils/gemini";
+import { saveNovel, loadNovel, loadNote } from "./utils/fileSystem.js";
+import { getNovelChapters, getNovelText } from "./utils/getNovel.js";
+import { requestTranslate, requestRetranslate } from "./utils/gemini.js";
 
 const novelID = process.env.NOVEL_ID;
 

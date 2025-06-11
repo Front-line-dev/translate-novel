@@ -1,8 +1,8 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import fs from "fs";
 
-const TRANSLATE_PROMPT = fs.readFileSync("../prompt/translate.md", "utf-8");
-const RETRANSLATE_PROMPT = fs.readFileSync("../prompt/retranslate.md", "utf-8");
+const TRANSLATE_PROMPT = fs.readFileSync("./prompt/translate.md", "utf-8");
+const RETRANSLATE_PROMPT = fs.readFileSync("./prompt/retranslate.md", "utf-8");
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
