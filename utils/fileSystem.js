@@ -22,8 +22,8 @@ function saveText(filePath, textContent) {
 //   id: '123'
 // }
 function saveInfo(novelID, novelChapter) {
-  makeDir(`../output/${novelID}`);
-  const infoPath = `../output/${novelID}/info.json`;
+  makeDir(`./output/${novelID}`);
+  const infoPath = `./output/${novelID}/info.json`;
   let info = {};
   if (fs.existsSync(infoPath)) {
     info = JSON.parse(fs.readFileSync(infoPath, "utf-8"));
@@ -42,14 +42,14 @@ function saveInfo(novelID, novelChapter) {
 function saveNovel(novelID, novelChapter, original, translated, note) {
   saveInfo(novelID, novelChapter);
 
-  const BASE_PATH = `../output/${novelID}`;
+  const BASE_PATH = `./output/${novelID}`;
   saveText(`${BASE_PATH}/${novelChapter}/original.txt`, original);
   saveText(`${BASE_PATH}/${novelChapter}/translated.txt`, translated);
   saveText(`${BASE_PATH}/${novelChapter}/note.txt`, note);
 }
 
 function loadNovel(novelID) {
-  const infoPath = `../output/${novelID}/info.json`;
+  const infoPath = `./output/${novelID}/info.json`;
 
   if (fs.existsSync(infoPath)) {
     const info = JSON.parse(fs.readFileSync(infoPath, "utf-8"));
@@ -60,17 +60,20 @@ function loadNovel(novelID) {
 }
 
 function loadNote(novelID) {
-  const infoPath = `../output/${novelID}/info.json`;
+  const infoPath = `./output/${novelID}/info.json`;
+
   if (fs.existsSync(infoPath)) {
     const info = JSON.parse(fs.readFileSync(infoPath, "utf-8"));
     const lastChapter = info.chapters[info.chapters.length - 1];
-    const notePath = `../output/${novelID}/${lastChapter}/note.txt`;
+    const notePath = `./output/${novelID}/${lastChapter}/note.txt`;
 
     if (fs.existsSync(notePath)) {
       return fs.readFileSync(notePath, "utf-8");
     }
   }
-  return "";
+
+  const sampleNote = fs.readFileSync("./prompt/noteSample.md", "utf-8");
+  return sampleNote;
 }
 
 export { saveNovel, loadNovel, loadNote };

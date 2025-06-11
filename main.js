@@ -7,19 +7,24 @@ const novelID = process.env.NOVEL_ID;
 
 const transaltedChapters = loadNovel(novelID);
 let note = loadNote(novelID);
-const chapters = getNovelChapters(novelID);
+const chapters = await getNovelChapters(novelID);
 
-chapters.forEach(async (chapterLink) => {
+for (let chapterLink of chapters) {
   const chapter = chapterLink.split("/").at(-2);
+  console.log("Starting translate", chapter);
 
   if (transaltedChapters.includes(chapter)) {
-    return;
+    console.log("Already translated", chapter);
+    continue;
   }
 
   const novelText = await getNovelText(chapterLink);
+  console.log("Translate", chapter);
   let { translated, newNote } = await requestTranslate(novelText, note);
+  console.log("Retranslate", chapter);
   const { retranslated } = await requestRetranslate(translated, newNote);
 
   saveNovel(novelID, chapter, novelText, retranslated, newNote);
   note = newNote;
-});
+  console.log("Finished translate", chapter);
+}

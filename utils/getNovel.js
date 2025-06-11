@@ -57,11 +57,6 @@ async function getNovelChapters(novelID) {
 
 // Get novel text
 async function getNovelText(novelLink) {
-  // fetch novelLink
-  // Find title with '.p-novel__title.p-novel__title--rensai'
-  // Find novel content with '.js-novel-text.p-novel__text'
-  // Novel content has <p> and <br>. Convert <br> to line break char
-  // return novel title + novel content to one string. Line break twice after the title
   console.log(`Fetching novel text from: ${novelLink}`);
   try {
     const response = await fetch(novelLink);
@@ -80,9 +75,19 @@ async function getNovelText(novelLink) {
     const title = titleElement ? titleElement.textContent.trim() : "Untitled";
 
     // Find novel content
-    const novelContentElement = document.querySelector(
-      ".js-novel-text.p-novel__text"
-    );
+    const novelContentElement = [
+      ...document.querySelectorAll(".js-novel-text.p-novel__text"),
+    ].filter((element) => {
+      if (
+        element.classList.contains("p-novel__text--afterword") ||
+        element.classList.contains("p-novel__text--preface")
+      ) {
+        return false;
+      }
+
+      return true;
+    })[0];
+
     if (!novelContentElement) {
       console.error("Novel content element not found.");
       return `${title}\n\n[Content not found]`;

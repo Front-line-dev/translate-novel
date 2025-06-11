@@ -37,7 +37,7 @@ const RETRANSLATE_CONFIG = {
     type: Type.OBJECT,
     required: ["retranslated"],
     properties: {
-      translated: {
+      retranslated: {
         type: Type.STRING,
       },
     },
@@ -69,13 +69,17 @@ async function requestTranslate(novelText, novelNote) {
   ];
 
   const response = await ai.models.generateContent({
-    MODEL,
-    TRANSLATE_CONFIG,
+    model: MODEL,
+    config: TRANSLATE_CONFIG,
     contents,
   });
 
   const responseObject = JSON.parse(response.text);
-  return responseObject;
+
+  return {
+    translated: responseObject.translated,
+    newNote: responseObject.note,
+  };
 }
 
 async function requestRetranslate(translated, novelNote) {
@@ -98,8 +102,8 @@ async function requestRetranslate(translated, novelNote) {
   ];
 
   const response = await ai.models.generateContent({
-    MODEL,
-    RETRANSLATE_CONFIG,
+    model: MODEL,
+    config: RETRANSLATE_CONFIG,
     contents,
   });
 
