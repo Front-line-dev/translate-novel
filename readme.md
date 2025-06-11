@@ -17,10 +17,6 @@ Translate Jp novels to Kr using LLM.
 
 ## To do
 
-- Make translate prompt
-  - First translate
-  - Generate note
-  - Refine translate
-- Make directory in output with novel ID
-- Generate translated text and note
-- Merge text
+- Backup early translated text
+- Backup Gemini API usageMetadata
+- Backup Gemini Thingking text
