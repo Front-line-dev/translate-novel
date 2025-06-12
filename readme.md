@@ -20,3 +20,6 @@ Translate Jp novels to Kr using LLM.
 - Backup early translated text
 - Backup Gemini API usageMetadata
 - Backup Gemini Thingking text
+- Try again if 500 Internal Server Error Gemini
+- 사용 방법 작성
+- 비용 측정
