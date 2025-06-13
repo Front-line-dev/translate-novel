@@ -25,10 +25,11 @@ for (let chapterLink of chapters) {
     note,
     chapter
   );
-  console.log("Retranslate", chapter);
-  const { retranslated } = await requestRetranslate(translated, newNote);
+  // console.log("Retranslate", chapter);
+  // const { retranslated } = await requestRetranslate(translated, newNote);
+  // saveNovel(novelID, chapter, novelText, retranslated, newNote, translated);
+  saveNovel(novelID, chapter, novelText, translated, newNote);
 
-  saveNovel(novelID, chapter, novelText, retranslated, newNote);
   note = newNote;
   console.log("Finished translate", chapter);
 }

@@ -39,13 +39,24 @@ function saveInfo(novelID, novelChapter) {
   console.log(`Info saved to file: ${infoPath}`);
 }
 
-function saveNovel(novelID, novelChapter, original, translated, note) {
+function saveNovel(
+  novelID,
+  novelChapter,
+  original,
+  translated,
+  note,
+  pretranslated
+) {
   saveInfo(novelID, novelChapter);
 
   const BASE_PATH = `./output/${novelID}`;
   saveText(`${BASE_PATH}/${novelChapter}/original.txt`, original);
   saveText(`${BASE_PATH}/${novelChapter}/translated.txt`, translated);
   saveText(`${BASE_PATH}/${novelChapter}/note.txt`, note);
+
+  if (pretranslated) {
+    saveText(`${BASE_PATH}/${novelChapter}/pretranslated.txt`, pretranslated);
+  }
 }
 
 function loadNovel(novelID) {
