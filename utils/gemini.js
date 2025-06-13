@@ -8,49 +8,35 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
 
-const MODEL = "gemini-2.5-pro-preview-05-06";
+const MODEL = "gemini-2.5-flash-preview-05-20";
 
-const TRANSLATE_CONFIG = {
-  responseMimeType: "application/json",
-  responseSchema: {
-    type: Type.OBJECT,
-    required: ["translated", "note"],
-    properties: {
-      translated: {
-        type: Type.STRING,
-      },
-      note: {
-        type: Type.STRING,
-      },
-    },
-  },
-  systemInstruction: [
-    {
-      text: TRANSLATE_PROMPT,
-    },
-  ],
-};
-
-const RETRANSLATE_CONFIG = {
-  responseMimeType: "application/json",
-  responseSchema: {
-    type: Type.OBJECT,
-    required: ["retranslated"],
-    properties: {
-      retranslated: {
-        type: Type.STRING,
-      },
-    },
-  },
-  systemInstruction: [
-    {
-      text: RETRANSLATE_PROMPT,
-    },
-  ],
-};
-
-async function requestTranslate(novelText, novelNote) {
+async function requestTranslate(novelText, novelNote, chapter) {
   const noteBase64 = Buffer.from(novelNote, "utf-8").toString("base64");
+
+  const config = {
+    thinkingConfig: {
+      thinkingBudget: 0,
+    },
+    responseMimeType: "application/json",
+    responseSchema: {
+      type: Type.OBJECT,
+      required: ["translated", "note"],
+      properties: {
+        translated: {
+          type: Type.STRING,
+        },
+        note: {
+          type: Type.STRING,
+        },
+      },
+    },
+    systemInstruction: [
+      {
+        text: TRANSLATE_PROMPT + chapter,
+      },
+    ],
+  };
+
   const contents = [
     {
       role: "user",
@@ -70,7 +56,7 @@ async function requestTranslate(novelText, novelNote) {
 
   const response = await ai.models.generateContent({
     model: MODEL,
-    config: TRANSLATE_CONFIG,
+    config,
     contents,
   });
 
@@ -84,6 +70,28 @@ async function requestTranslate(novelText, novelNote) {
 
 async function requestRetranslate(translated, novelNote) {
   const noteBase64 = Buffer.from(novelNote, "utf-8").toString("base64");
+
+  const config = {
+    thinkingConfig: {
+      thinkingBudget: 0,
+    },
+    responseMimeType: "application/json",
+    responseSchema: {
+      type: Type.OBJECT,
+      required: ["retranslated"],
+      properties: {
+        retranslated: {
+          type: Type.STRING,
+        },
+      },
+    },
+    systemInstruction: [
+      {
+        text: RETRANSLATE_PROMPT,
+      },
+    ],
+  };
+
   const contents = [
     {
       role: "user",
@@ -103,7 +111,7 @@ async function requestRetranslate(translated, novelNote) {
 
   const response = await ai.models.generateContent({
     model: MODEL,
-    config: RETRANSLATE_CONFIG,
+    config,
     contents,
   });
 

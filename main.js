@@ -20,7 +20,11 @@ for (let chapterLink of chapters) {
 
   const novelText = await getNovelText(chapterLink);
   console.log("Translate", chapter);
-  let { translated, newNote } = await requestTranslate(novelText, note);
+  let { translated, newNote } = await requestTranslate(
+    novelText,
+    note,
+    chapter
+  );
   console.log("Retranslate", chapter);
   const { retranslated } = await requestRetranslate(translated, newNote);
 
