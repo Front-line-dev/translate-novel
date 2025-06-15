@@ -1,5 +1,10 @@
 import "dotenv/config";
-import { saveNovel, loadNovel, loadNote } from "./utils/fileSystem.js";
+import {
+  saveNovel,
+  loadNovel,
+  loadNote,
+  mergeNovel,
+} from "./utils/fileSystem.js";
 import { getNovelChapters, getNovelText } from "./utils/getNovel.js";
 import { requestTranslate, requestRetranslate } from "./utils/gemini.js";
 
@@ -33,3 +38,6 @@ for (let chapterLink of chapters) {
   note = newNote;
   console.log("Finished translate", chapter);
 }
+
+console.log("Merge Novel");
+mergeNovel(novelID);

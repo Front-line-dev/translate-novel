@@ -87,4 +87,24 @@ function loadNote(novelID) {
   return sampleNote;
 }
 
-export { saveNovel, loadNovel, loadNote };
+function mergeNovel(novelId) {
+  const infoPath = `./output/${novelId}/info.json`;
+  if (!fs.existsSync(infoPath)) {
+    console.error(`Info file not found for novel ID: ${novelId}`);
+    return;
+  }
+
+  const info = JSON.parse(fs.readFileSync(infoPath, "utf-8"));
+  const chapters = info.chapters;
+
+  // convert to array reduce
+  const mergedText = chapters.reduce((acc, chapter) => {
+    const translatedPath = `./output/${novelId}/${chapter}/translated.txt`;
+    const translated = fs.readFileSync(translatedPath, "utf-8");
+    return acc + `Chapter ${chapter}\n${translated}\n\n`;
+  }, "");
+
+  fs.writeFileSync(`./output/${novelId}/merged.txt`, mergedText, "utf-8");
+}
+
+export { saveNovel, loadNovel, loadNote, mergeNovel };
