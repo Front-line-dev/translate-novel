@@ -29,5 +29,9 @@ Translate Jp novels to Kr using LLM.
   - 없는 경우 속담 문장을 직역한 뒤 주석 추가
 - 가타카나의 원단어가 영어일 경우, 원본 영어의 발음을 살려서 번역
   - 인물명, 고유명사의 경우 영어가 아니더라도 원언어를 한국에서 사용하는 발음으로 표시
-- Try again if 500 Internal Server Error Gemini
+- 버그
+  - Try again if 500 Internal Server Error Gemini
+  - SyntaxError: Bad control character in string literal in JSON at position
+  - SyntaxError: Unexpected non-whitespace character after JSON at position
+  - Structured Output 시작 문자열이 `{` or `[` 가 아닌 버그
 - 사용 방법 작성

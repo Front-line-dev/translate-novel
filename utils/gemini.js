@@ -60,7 +60,10 @@ async function requestTranslate(novelText, novelNote, chapter) {
     contents,
   });
 
-  const responseObject = JSON.parse(response.text);
+  // ```json 마크업 문법으로 Structured output이 시작하는 버그 제어
+  const responseText = response.text.replace("```json", "");
+
+  const responseObject = JSON.parse(responseText);
 
   return {
     translated: responseObject.translated,
