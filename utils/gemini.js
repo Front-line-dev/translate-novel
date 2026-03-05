@@ -8,7 +8,7 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
 
-const MODEL = "gemini-2.5-flash-preview-05-20";
+const MODEL = "gemini-3.1-flash-lite-preview";
 
 async function requestTranslate(novelText, novelNote, chapter) {
   const noteBase64 = Buffer.from(novelNote, "utf-8").toString("base64");
@@ -59,6 +59,18 @@ async function requestTranslate(novelText, novelNote, chapter) {
     config,
     contents,
   });
+
+  console.log(response);
+
+  //   GenerateContentResponse {
+  //   modelVersion: 'gemini-3.1-flash-lite-preview',
+  //   promptFeedback: { blockReason: 'PROHIBITED_CONTENT' },
+  //   usageMetadata: {
+  //     promptTokenCount: 8816,
+  //     totalTokenCount: 8816,
+  //     promptTokensDetails: [ [Object] ]
+  //   }
+  // }
 
   // ```json 마크업 문법으로 Structured output이 시작하는 버그 제어
   const responseText = response.text.replace("```json", "");
